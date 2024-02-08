@@ -12,8 +12,8 @@ import com.mycompany.conference.service.UserService;
 @RestController
 public class UserController {
 
-//    @Autowired
-//    private UserService userService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/user")
     public User getUser(@RequestParam(value = "firstname") String firstname,
@@ -28,14 +28,14 @@ public class UserController {
         return user;
     }
 
-//    @PostMapping("/user")
-//    public User postUser(User user) {
-//        System.out.println("User first name: " + user.getFirstname());
-//        userService.save(user);
-//
-//        return user;
-//
-//    }
+    @PostMapping("/user")
+    public User postUser(User user) {
+        System.out.println("User first name: " + user.getFirstname());
+        userService.save(user);
+
+        return user;
+
+    }
 
 
 }

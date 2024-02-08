@@ -25,21 +25,21 @@ public class RegistrationController {
         return "registration";
     }
 
-    @GetMapping("registrations")
-    public @ResponseBody List<Registration> getRegistrations() {
+//    @GetMapping("registrations")
+//    public @ResponseBody List<Registration> getRegistrations() {
+//
+//        List<Registration> registrations = registrationService.findAll();
+//
+//        return registrations;
+//    }
 
-        List<Registration> registrations = registrationService.findAll();
-
-        return registrations;
-    }
-
-    @GetMapping("registration-reports")
-    public @ResponseBody List<RegistrationReport> getRegistrationReports() {
-
-        List<RegistrationReport> registrationReports = registrationService.findAllReports();
-
-        return registrationReports;
-    }
+//    @GetMapping("registration-reports")
+//    public @ResponseBody List<RegistrationReport> getRegistrationReports() {
+//
+//        List<RegistrationReport> registrationReports = registrationService.findAllReports();
+//
+//        return registrationReports;
+//    }
 
     @PostMapping("registration")
     public String addRegistration(@Valid @ModelAttribute ("registration")

@@ -11,7 +11,7 @@ public interface RegistrationService {
     @Transactional
     Registration addRegistration(Registration registration);
 
-    List<Registration> findAll();
-
-    List<RegistrationReport> findAllReports();
+//    List<Registration> findAll();
+//
+//    List<RegistrationReport> findAllReports();
 }

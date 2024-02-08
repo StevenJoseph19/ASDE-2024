@@ -19,15 +19,15 @@ public class RegistrationRepositoryImpl implements RegistrationRepository {
         return registration;
     }
 
-    @Override
-    public List<Registration> findAll() {
-        List<Registration> registrations = entityManager.createQuery("Select r from Registration r").getResultList();
-
-        return registrations;
-    }
-
-    @Override
-    public List<RegistrationReport> findAllReports() {
+//    @Override
+//    public List<Registration> findAll() {
+//        List<Registration> registrations = entityManager.createQuery("Select r from Registration r").getResultList();
+//
+//        return registrations;
+//    }
+//
+//    @Override
+//    public List<RegistrationReport> findAllReports() {
 //      String jpql = "SELECT new  com.mycompany.conference.model.RegistrationReport"+
 //                    "(r.name, c.name,c.description) " +
 //                    "from Registration r, Course c " +
@@ -35,8 +35,8 @@ public class RegistrationRepositoryImpl implements RegistrationRepository {
 
 //        List<RegistrationReport> registrationReports = entityManager.createQuery(jpql).getResultList();
 
-        List<RegistrationReport> registrationReports = entityManager.createNamedQuery(Registration.REGISTRATION_REPORT).getResultList();
-        return registrationReports;
-    }
+//        List<RegistrationReport> registrationReports = entityManager.createNamedQuery(Registration.REGISTRATION_REPORT).getResultList();
+//        return registrationReports;
+//    }
 
 }

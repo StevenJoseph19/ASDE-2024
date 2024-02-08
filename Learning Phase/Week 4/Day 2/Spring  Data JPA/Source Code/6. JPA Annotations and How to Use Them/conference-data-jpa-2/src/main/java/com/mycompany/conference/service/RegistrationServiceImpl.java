@@ -17,52 +17,53 @@ import javax.transaction.Transactional;
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
+//public class RegistrationServiceImpl {
 
     @Autowired
     private RegistrationRepository registrationRepository;
 
-    @Autowired
-    private CourseRepository courseRepository;
-
-
-//    @Override
-//    @Transactional
-//    public Registration addRegistration(Registration registration) {
-//        return registration;
-//        return registrationRepository.save(registration);
-//
-//    }
+//    @Autowired
+//    private CourseRepository courseRepository;
 
 
     @Override
     @Transactional
     public Registration addRegistration(Registration registration) {
-        Registration tempRegistration;
 
-        if (registration.getId() == null) {
-            tempRegistration = registrationRepository.save(registration);
-            Course course = new Course();
-            course.setName("Intro");
-            course.setDescription("Every attendee must complete the intro");
-            course.setRegistration(registration);
+        return registrationRepository.save(registration);
 
-            courseRepository.save(course);
-        } else {
-            tempRegistration = registrationRepository.save(registration);
-        }
-
-        return tempRegistration;
-    }
-
-    @Override
-    public List<Registration> findAll() {
-
-        return registrationRepository.findAll();
     }
 
 
-	public List<RegistrationReport> findAllReports() {
-		return registrationRepository.findAllReports();
-	}
+//    @Override
+//    @Transactional
+//    public Registration addRegistration(Registration registration) {
+//        Registration tempRegistration;
+//
+//        if (registration.getId() == null) {
+//            tempRegistration = registrationRepository.save(registration);
+//            Course course = new Course();
+//            course.setName("Intro");
+//            course.setDescription("Every attendee must complete the intro");
+//            course.setRegistration(registration);
+//
+//            courseRepository.save(course);
+//        } else {
+//            tempRegistration = registrationRepository.save(registration);
+//        }
+//
+//        return tempRegistration;
+//    }
+
+//    @Override
+//    public List<Registration> findAll() {
+//
+//        return registrationRepository.findAll();
+//    }
+
+
+//	public List<RegistrationReport> findAllReports() {
+//		return registrationRepository.findAllReports();
+//	}
 
 }
