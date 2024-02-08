@@ -31,3 +31,9 @@ POST http://localhost:8080/friend
  "friend": "http://localhost:8080/friends/1"
 
 ********************************************************
+
+insert into friend(first_name,last_name) values ('Ada','Lovelace');
+insert into friend(first_name,last_name) values ('Charles','Flint');
+select * from friend;
+delete from friend;
+*****************************************************************8888
