@@ -1,1 +1,1 @@
-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
+https://github.com/spring-projects/spring-petclinic.git

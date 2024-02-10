@@ -1,2 +1,6 @@
   <user username="tomcatmanager" password="password" roles="manager-gui"/>
   <user username="deployer" password="password" roles="manager-script"/>
+
+==================================================================================
+
+Install Deploy to container plugin
