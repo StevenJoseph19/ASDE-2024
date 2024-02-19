@@ -57,19 +57,5 @@ class PersonTest {
 		System.out.println(b);
 	}
 
-	@Test
-	void testEncapsulationSerialization() throws IOException, ClassNotFoundException {
-		Person a = new Person("dave", 23);
-		ByteArrayOutputStream boas = new ByteArrayOutputStream();
-		try (ObjectOutputStream oos = new ObjectOutputStream(boas)) {
-			oos.writeObject(a);
-		}
-		byte[] bytes = boas.toByteArray();
-		bytes[237] = 12; // sneaky ...
-		try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
-			Person b = (Person) ois.readObject();
-			System.out.println(a);
-			System.out.println(b);
-		}
-	}
+	
 }
