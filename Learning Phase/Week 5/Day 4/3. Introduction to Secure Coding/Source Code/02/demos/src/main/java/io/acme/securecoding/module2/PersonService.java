@@ -6,11 +6,15 @@ import java.util.Map;
 public class PersonService {
 	private final Map<String, Person> people = new HashMap<>();
 
-	public Person addPerson(String name, int age) {
-		return this.people.computeIfAbsent(name, (k) -> new Person());
-	}
+//	public Person addPerson(String name, int age) {
+//		return this.people.computeIfAbsent(name, (k) -> new Person());
+//	}
 
 	public Person removePerson(String name) {
 		return this.people.remove(name);
+	}
+
+	public boolean mayPersonDrive(Person person){
+		return  person.getAge() >=16;
 	}
 }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>JavaScript Errors</h1>
+<p>In this example we have written "alert" as "adddlert" to deliberately produce an error.</p>
+<p>The name property of the Error object returns the name of the error and the message property returns a description of the error:</p>
+
+<p id="demo" style="color:red"></p>
+
+<script>
+try {
+  adddlert("Welcome guest!");
+}
+catch(err) {
+  document.getElementById("demo").innerHTML = 
+  err.name + "<br>" + err.message;
+}
+</script>
+
+</body>
+</html>
