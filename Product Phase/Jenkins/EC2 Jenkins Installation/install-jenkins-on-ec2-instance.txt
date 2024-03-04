@@ -1,0 +1,101 @@
+For openVPN client, choose Amazon Linux 2 AMI (HVM)
+
+Security Group
+====================
+Open ports 22 and 8080
+add the security group of ur openvpn instance to jenkin instance
+
+SSH into EC2 instance
+======================
+Install Java
+-------------------------
+------------------------
+sudo yum update
+sudo yum install java-17-amazon-corretto -y
+java -version
+
+==========================================================
+Setting up JAVA environment variable on Amazon Linux – EC2
+==========================================================
+
+export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto.x86_64
+
+
+$ echo $JAVA_HOME
+$ echo $PATH
+
+The JAVA_HOME variable you just declared is temporary. If you close the terminal or start a new session, it will be empty again.
+To set JAVA_HOME variable ‘permanently’, you should add it to the bashrc file in your home directory.
+==============================================================================================
+cat ~/.bashrc
+
+vi ~/.bashrc  - To edit .bashrc
+
+Back up your bashrc file (in case you mess it, you can get it back):
+=======================================================================
+cp ~/.bashrc ~/.bashrc.bak
+
+====================================================
+.bashrc is a hidden file inside your home directory.
+====================================================
+To see it, do a:
+========================
+ls -la ~/ | more
+
+Next, use the echo command to append the export command you used at the beginning of this section. 
+Change the command below to use the correct path as displayed by your system in
+
+echo "export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto.x86_64" >> ~/.bashrc
+
+Verify that it has been correctly added to the end of the file:
+======================================================================
+tail -3 ~/.bashrc
+
+======================================================================
+The above tail command will show the last 3 lines of the specified file.
+======================================================================
+
+PATH=$JAVA_HOME/bin:$PATH
+
+source  ~/.bashrc
+
+Now, even if you exit the session or restart the system, the JAVA_HOME variable will still be set to the value you specified.
+
+==============================================================================================================================
+
+Install Jenkins
+===================
+sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+
+sudo yum install jenkins -y
+
+sudo systemctl enable jenkins
+sudo systemctl start jenkins
+
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+To Stop Jenkins
+=============================
+sudo systemctl stop jenkins
+
+
+Check status of Jenkins
+================================
+sudo systemctl status jenkins
+
+Access Jenkins @
+==================================
+
+http://<Public IPv4 address>:8080
+
+for instance  - http://54.208.73.203:8080/
+
+UnInstall Jenkins on AWS EC2 Linux
+===================================
+sudo yum remove jenkins
+
+
+

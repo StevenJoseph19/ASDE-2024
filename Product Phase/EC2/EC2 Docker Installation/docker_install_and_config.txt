@@ -1,0 +1,53 @@
+===================================================
+Install the following Jenkins Plugins:
+===================================================
+
+Docker 
+
+=============================================================
+Run the following commands after SSHing into your EC2 instance
+=============================================================
+sudo yum update -y
+
+sudo amazon-linux-extras install docker
+
+sudo systemctl start docker
+
+sudo service docker status
+
+sudo groupadd docker
+
+sudo usermod -a -G docker ec2-user
+
+sudo usermod -a -G docker jenkins
+
+#newgrp docker
+
+docker --version
+
+
+Install docker-compose on EC2 instance
+==================================================
+sudo systemctl enable docker.service --now
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+docker-compose version
+
+To add DockerCompose to Path
+=========================================
+
+which docker-compose
+
+# /usr/local/bin/docker-compose
+
+Jenkinsfile will be modified to:
+
+pipeline {
+
+    environment {
+        PATH = "$PATH:/usr/local/bin"
+    }
+}
+
+sudo chmod 777 /var/run/docker.sock
