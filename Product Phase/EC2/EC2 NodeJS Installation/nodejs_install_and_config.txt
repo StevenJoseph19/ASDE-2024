@@ -1,0 +1,13 @@
+Install npm/nodejs on Amazon Linux 2 ec2 isntance:
+====================================================
+
+curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
+
+sudo yum -y install nodejs 
+
+You can verify the version of node and npm as below:
+=====================================================
+
+node -v
+
+npm -v

@@ -1,0 +1,103 @@
+pipeline {
+   agent {
+    label 'nodejs'
+   }
+//    tools {
+//     nodejs 'nodejs'
+//    }
+//     options {
+//     	buildDiscarder(
+//         logRotator(
+//             // number of build logs to keep
+//             numToKeepStr:'2',
+//             // history to keep in days
+//             daysToKeepStr: '2',
+//             // artifacts are kept for days
+//             artifactDaysToKeepStr: '2',
+//             // number of builds have their artifacts kept
+//             artifactNumToKeepStr: '2'
+//         )
+//     	)
+// 		}
+   stages {
+     stage('Checkout code'){
+	
+        steps {
+		    echo  'Pulling..' + env.BRANCH_NAME
+                
+                git credentialsId: 'bitbucket_frontend_creds', url: 'https://tools.publicis.sapient.com/bitbucket/scm/pjagb/ps-bmh-testing-frontend.git', branch : env.BRANCH_NAME
+
+		    }
+	    }
+      stage('Verify Branch') {
+        steps {
+            echo "$GIT_BRANCH"
+         }
+      }
+      stage('Startup') {
+        steps {
+          sh 'npm install --force --verbose'
+        }
+      }
+      stage('Test'){
+        steps {
+          echo "$GIT_BRANCH"
+          sh 'npm run test'
+        }
+      }
+//       stage('SonarQube analysis') {
+//         steps {
+//           withSonarQubeEnv('Sonarqube') {
+//             echo "$GIT_BRANCH"
+//                sh "node ./scripts/sonarqube-scanner.js"
+//           }
+//         }
+//       }
+//       stage('Build') {
+//         steps {
+//           sh 'npm run build'
+//         }
+//       }
+//       stage('Push to AWS S3'){ 
+//         when {
+//                 expression {
+//                     return env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'develop'
+//                 }
+//             }
+//         steps{
+//             dir('build'){
+//               withAWS(credentials: 'prod-AWS', region: 'us-east-1'){
+//                 s3Upload (acl: 'Private' , bucket: 'ps-bookmyhotel-fe-s3' ,  includePathPattern: '**/*')
+//               }
+//             }
+//         }
+//       } 
+//       stage('Run BDD Tests'){
+//         steps {
+//           sh 'npm run bdd-tests'
+//         }
+//       }
+//       stage('Publish Cucumber Reports'){
+//         steps{
+//           cucumber buildStatus: "UNSTABLE",
+//           fileIncludePattern: '**/*.json',
+//           jsonReportDirectory: 'report'
+//         }
+//       }
+//    }
+//    post {
+//         // Clean after build
+//         cleanup {
+// 					cleanWs(cleanWhenNotBuilt: false,
+//                     deleteDirs: true,
+//                     disableDeferredWipeout: true,
+//                     notFailBuild: true,
+//                     patterns: [[pattern: '.*', type: 'INCLUDE']])
+// 						sh 'docker logout'
+// 						echo 'Current directory is..'
+// 						echo pwd()
+// 						sh "rm ${env.WORKSPACE}/* -fr"
+//         }
+//     }
+}
+}
