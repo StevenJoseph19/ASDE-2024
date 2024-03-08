@@ -127,6 +127,20 @@ pipeline {
 		// 	}
 		// }
 
+  		stage('Run Cucumber Tests') {
+                    
+            steps {
+                        // steps to run Cucumber tests
+                        sh 'mvn clean verify'
+                    }
+            }
+
+		 stage('Publish Cucumber Reports') {
+                cucumber buildStatus: "UNSTABLE",
+                fileIncludePattern: '**/*.json',
+                jsonReportDirectory: 'target'
+            }
+        }	
 		stage('Logout from AWS ECR') {
             steps {
                 script {
