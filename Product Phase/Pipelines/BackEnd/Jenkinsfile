@@ -1,0 +1,159 @@
+pipeline {
+    agent {
+        label 'java'
+    }
+
+	options {
+		buildDiscarder(
+			logRotator(
+				// number of build logs to keep
+				numToKeepStr:'2',
+				// history to keep in days
+				daysToKeepStr: '2',
+				// artifacts are kept for days
+				artifactDaysToKeepStr: '2',
+				// number of builds have their artifacts kept
+				artifactNumToKeepStr: '2'
+			)
+		)
+	}
+
+    stages {
+        stage('Package Code') {
+            steps {
+                echo "Packaging code"
+                sh 'mvn clean package' ;
+            }
+        }
+
+        stage('Run JUnit Tests') {
+            steps {
+                // Add steps to run JUnit tests
+                echo "Running unit tests"
+
+                sh 'mvn test'
+            }
+        }
+        // stage('SonarQube analysis') {
+		// 	steps{
+		// 		withSonarQubeEnv('Sonarqube') {
+		// 			sh "mvn sonar:sonar"
+		// 		}
+		// 	}
+		// }
+
+        stage('Build and Push Docker Image') {
+        	when {
+				expression {
+					return env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'master'
+				}
+			}
+            steps {
+                // Step 1: Checkout code from SCM
+                // checkout scm
+ 
+                // Step 1: Creating the jar file
+                echo "Jar file creation"
+                sh 'mvn package'
+               
+                // Step 2: Build Docker Image
+				sh ' echo "whoami:`whoami`"'
+                sh 'sudo docker build -t friends-service .'
+               
+                // Step 3: Authenticate with Container Registry (AWS ECR example)
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'prod-AWS', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                   
+                    script {
+                        
+                        sh 'echo $AWS_SECRET_ACCESS_KEY'
+                        def login = sh(script: 'aws ecr get-login-password --region us-east-1', returnStdout: true).trim()
+                        sh "echo '${login}' | docker login --username AWS --password-stdin 565358953234.dkr.ecr.us-east-1.amazonaws.com"
+                    }
+                }
+ 
+               
+                // Step 4: Tag Docker Image
+                sh 'docker tag friends-service:latest 565358953234.dkr.ecr.us-east-1.amazonaws.com/bmh-registry:friends-service'
+               
+                // Step 5: Push Docker Image to Registry
+                sh 'docker push  565358953234.dkr.ecr.us-east-1.amazonaws.com/bmh-registry:friends-service'
+            }
+        }
+
+        //Deployment
+        // stage('Deploy to Kubernetes') {
+		// 	when {
+		// 		expression {
+		// 			return env.BRANCH_NAME == 'develop'
+		// 		}
+		// 	}
+		// 	steps {
+        //         script {
+        //             // Print the content of kubeconfig file
+        //             sh 'cat /home/ec2-user/.kube/config';
+
+        //             // Deploy using kubectl with force and specified kubeconfig path
+        //             sh 'kubectl apply -f ./prod-dev.yaml --force --kubeconfig=/home/ec2-user/.kube/config'
+        //         }
+        //     }
+        // }
+
+		// stage('Execute Performance Tests') {
+		// 	steps{
+		// 				// Pipeline Utility Steps Plugin --> findFiles
+		// 		script{
+		// 			dir(WORKSPACE) {
+		// 				def install_folder = findFiles(glob: "apache-jmeter-5.5/*.*")
+		// 				if (install_folder.length > 0) {
+		// 					echo "Apache JMeter installation directory found in ${WORKSPACE}."
+		// 				}
+		// 				else {
+		// 					echo "Apache JMeter is being installed in ${WORKSPACE}."
+		// 					sh '''
+		// 					curl https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.5.tgz -o apache-jmeter-5.5.tgz
+		// 					tar -xvzf apache-jmeter-5.5.tgz
+		// 					rm apache-jmeter-5.5.tgz
+		// 					'''
+		// 				}
+
+		// 				// Get all JMX files from scripts directory
+		// 				def files = findFiles(glob: '**/performance-tests/*.jmx')
+
+		// 				for (int i=0; i<files.size(); i++) {
+		// 					sh """./apache-jmeter-5.5/bin/jmeter.sh -n -t ${files[i].path} -l ./results/${files[i].name.replace('.jmx','.jtl')}"""
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
+
+		stage('Logout from AWS ECR') {
+            steps {
+                script {
+                    // Logout from AWS ECR
+                    sh 'docker logout 565358953234.dkr.ecr.us-east-1.amazonaws.com'
+                }
+            }
+        }
+
+	}
+
+	post {
+		cleanup {
+		echo 'Executing cleanup block'
+		cleanWs(cleanWhenNotBuilt: false,
+		deleteDirs: true,
+		disableDeferredWipeout: true,
+		notFailBuild: true,
+		patterns: [[pattern: '.*', type: 'INCLUDE']])
+			// sh 'docker logout'
+			echo 'Current directory is..'
+			echo pwd()
+			sh "rm ${env.WORKSPACE}/* -fr"
+			echo 'cleanup block completed'
+		}
+	}
+	}
+// }
+
+   
